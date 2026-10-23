@@ -1,2 +1,2 @@
 # ToDoApp3
-生のJavaScript制作するToDoアプリ
+生のJavaScriptで制作するToDoアプリ
