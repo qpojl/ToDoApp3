@@ -21,12 +21,19 @@ form.addEventListener("submit",(event)=>{
 function add(todo) {
     let inputValue = input.value;
     if(todo){
-        inputValue = todo;
+        inputValue = todo.text;
     }
     if(inputValue){
         const li = document.createElement("li");
         const liNodeContainer = document.createElement("div");
         liNodeContainer.classList.add("d-flex","justify-content-between");
+        const textContainer = document.createElement("div");
+        textContainer.classList.add("todo-text");
+
+        if (todo && todo.completed){
+            textContainer.classList.add("text-decoration-line-through");
+        }
+
         const deleteButton = document.createElement("input");
         deleteButton.type = "button";
         deleteButton.value = "Delete";
@@ -38,10 +45,17 @@ function add(todo) {
         saveData();
         })
 
-        liNodeContainer.innerText = inputValue;
+        textContainer.innerText = inputValue;
+        liNodeContainer.appendChild(textContainer);
         liNodeContainer.appendChild(deleteButton);
         li.appendChild(liNodeContainer);
         li.classList.add("list-group-item","bg-light","border-dark-subtle");
+
+        li.addEventListener("click",()=>{
+            textContainer.classList.toggle("text-decoration-line-through");
+            saveData();
+        });
+
         ul.appendChild(li);
         input.value = "";
         saveData();
@@ -51,6 +65,13 @@ function add(todo) {
 function saveData(){
     const lists = document.querySelectorAll("li");
     const todos = [];
-    lists.forEach(value => todos.push(value.innerText));
+    lists.forEach(value => {
+        const textContainer = value.querySelector(".todo-text");
+        const todo = {
+            text : textContainer.innerText,
+            completed : textContainer.classList.contains("text-decoration-line-through")
+        }
+        todos.push(todo);
+    });
     localStorage.setItem("todos",JSON.stringify(todos));
 }
